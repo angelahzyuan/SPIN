@@ -1,13 +1,15 @@
 # Model arguments
 # model_name_or_path: alignment-handbook/zephyr-7b-sft-full
 # model_revision: ac6e600eefcce74f5e8bae1035d4f66019e93190
-model_name_or_path: UCLA-AGI/zephyr-7b-sft-full-SPIN-iter0 # Change this to outputs/iter0-ckpt if trained by finetune.sh
-
+#model_name_or_path: UCLA-AGI/zephyr-7b-sft-full-SPIN-iter0 # Change this to outputs/iter0-ckpt if trained by finetune.sh
+model_name_or_path: /mnt/bn/ailab-gqq-hl/mlx/users/quanquan.gu/playground/SPIN/outputs/iter0-ckpt-num1/checkpoint-782
 # Data training arguments
 dataset_mixer:
   #HuggingFaceH4/ultrafeedback_binarized: 1.0
-  UCLA-AGI/SPIN_iter0: 1.0
-  UCLA-AGI/SPIN_iter1: 1.0
+  # UCLA-AGI/SPIN_iter0: 1.0
+  # UCLA-AGI/SPIN_iter1: 1.0
+  new_data/iter0: 1.0
+  new_data/iter1: 1.0
 dataset_splits:
 - train
 - test
@@ -34,7 +36,8 @@ output_dir: outputs
 per_device_train_batch_size: 8
 per_device_eval_batch_size: 4
 push_to_hub: false
-save_strategy: "epoch"
+save_strategy: "steps"
+save_steps: 200
 save_total_limit: null
 seed: 42
 warmup_ratio: 0.1

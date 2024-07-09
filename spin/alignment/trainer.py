@@ -454,14 +454,14 @@ class SPINTrainer(Trainer):
         real_rewards = self.beta * (policy_real_logps - opponent_real_logps).detach()
         generated_rewards = self.beta * (policy_generated_logps - opponent_generated_logps).detach()
 
-        print(f"losses: {losses}")
-        print(f"policy_real_logps: {policy_real_logps}")
-        print(f"policy_generated_logps: {policy_generated_logps}")
-        print(f"opponent_real_logps: {opponent_real_logps}")
-        print(f"opponent_generated_logps: {opponent_generated_logps}")
-        print(f"logits: {logits}")
-        print(f"real_rewards: {real_rewards}")
-        print(f"generated_rewards: {generated_rewards}")
+        # print(f"losses: {losses}")
+        # print(f"policy_real_logps: {policy_real_logps}")
+        # print(f"policy_generated_logps: {policy_generated_logps}")
+        # print(f"opponent_real_logps: {opponent_real_logps}")
+        # print(f"opponent_generated_logps: {opponent_generated_logps}")
+        # print(f"logits: {logits}")
+        # print(f"real_rewards: {real_rewards}")
+        # print(f"generated_rewards: {generated_rewards}")
         
         return losses, real_rewards, generated_rewards
 

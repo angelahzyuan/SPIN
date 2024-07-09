@@ -165,3 +165,10 @@ wandb/
 reformatted/
 data/
 outputs/
+new_data/iter0/test_prefs-00000-of-00001.parquet
+new_data/iter0/train_prefs-00000-of-00001.parquet
+new_data/iter1/test_prefs-00000-of-00001.parquet
+new_data/iter1/train_prefs-00000-of-00001.parquet
+new_data/iter1_EM/test_prefs-00000-of-00001.parquet
+new_data/iter1_EM/train_prefs-00000-of-00001.parquet
+new_data

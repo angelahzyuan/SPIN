@@ -36,6 +36,13 @@ def parse_arguments():
     parser.add_argument("--split", type=str, default="train")
     return parser.parse_args()
 
+def apply_template(text, tokenizer):
+    return tokenizer.apply_chat_template(
+        [{"role": "user", "content": text}, {"role": "assistant", "content": "None"}],
+        tokenize=False, add_generate_prompt=True
+    ).split("None")[0]
+
+
 
 # NOTE: `gpu_queue, task_queue` needs to be at the end (others handled by partial)
 def run_process_on_gpu(
@@ -73,7 +80,7 @@ def generate_on_single_gpu(
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     tokenizer.pad_token = tokenizer.eos_token
 
-    sampling_params = SamplingParams(temperature=1.0, top_p=1.0, max_tokens=256)
+    sampling_params = SamplingParams(temperature=1.0, top_p=1.0, max_tokens=2048)
 
     # load data
     data = load_dataset(input_dir, split=split)
@@ -81,17 +88,18 @@ def generate_on_single_gpu(
     if frac_len > 0:
         sub_len = frac_len
         if sub_len * (data_frac + 1) > len(data):
-            data = data[sub_len * data_frac :]["real"]
+            data = data[sub_len * data_frac :]["messages"]
         else:
-            data = data[sub_len * data_frac : sub_len * (data_frac + 1)]["real"]
+            data = data[sub_len * data_frac : sub_len * (data_frac + 1)]["messages"]
 
-    prompts_all = [
-        "### Instruction: " + data[idx][0]["content"] + "\n\n### Response: "
-        for idx in range(len(data))
-    ]
+    # prompts_all = [
+    #     "### Instruction: " + data[idx][0]["content"] + "\n\n### Response: "
+    #     for idx in range(len(data))
+    # ]
+    prompts_all = [apply_template(data[idx][0]["content"], tokenizer) for idx in range(len(data))]
     prompts_old = [data[idx][0]["content"] for idx in range(len(data))]
     corrects_all = [data[idx][1]["content"] for idx in range(len(data))]
-
+    print(prompts_all[0])
     start = time.time()
 
     # run vllm
@@ -107,7 +115,7 @@ def generate_on_single_gpu(
     # collecting data
     for idx in range(len(corrects_all)):
         d = {
-            "real": [
+            "real": [   
                 {"role": "user", "content": prompts_old[idx]},
                 {"role": "assistant", "content": corrects_all[idx]},
             ],
